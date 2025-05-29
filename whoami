@@ -1,0 +1,69 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sophos Whoami API",
+    "version": "1.0.0",
+    "description": "API per ottenere informazioni sull'entità autenticata nel sistema Sophos Central."
+  },
+  "servers": [
+    {
+      "url": "https://api.central.sophos.com"
+    }
+  ],
+  "paths": {
+    "/whoami/v1": {
+      "get": {
+        "summary": "Ottiene informazioni sull'entità autenticata",
+        "operationId": "getWhoami",
+        "responses": {
+          "200": {
+            "description": "Risposta contenente le informazioni sull'entità autenticata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Identificatore univoco dell'entità"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Nome dell'entità"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Tipo dell'entità (es. 'organization', 'partner')"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "type"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Non autorizzato - token di accesso mancante o non valido"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

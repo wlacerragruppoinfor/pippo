@@ -10,7 +10,7 @@
       "get": {
         "summary": "Get caller identity",
         "description": "Returns information about the caller based on their auth token.",
-        "operationId": "getCallerIdentity",
+        "operationId": "getWhoAmI",
         "security": [
           {
             "bearerAuth": []

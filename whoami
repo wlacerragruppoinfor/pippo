@@ -1,23 +1,24 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Sophos Whoami API",
+    "title": "Sophos Central API - Whoami",
     "version": "1.0.0",
-    "description": "API per ottenere informazioni sull'entità autenticata nel sistema Sophos Central."
+    "description": "Returns information about the caller."
   },
-  "servers": [
-    {
-      "url": "https://api.central.sophos.com"
-    }
-  ],
   "paths": {
     "/whoami/v1": {
       "get": {
-        "summary": "Ottiene informazioni sull'entità autenticata",
-        "operationId": "getWhoami",
+        "summary": "Get caller identity",
+        "description": "Returns information about the caller based on their auth token.",
+        "operationId": "getCallerIdentity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Risposta contenente le informazioni sull'entità autenticata",
+            "description": "Information about the caller.",
             "content": {
               "application/json": {
                 "schema": {
@@ -25,35 +26,34 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "Identificatore univoco dell'entità"
+                      "format": "uuid",
+                      "description": "ID of the caller."
                     },
-                    "name": {
+                    "idType": {
                       "type": "string",
-                      "description": "Nome dell'entità"
+                      "description": "The type of the ID of the caller.",
+                      "enum": ["partner", "organization", "tenant"]
                     },
-                    "type": {
-                      "type": "string",
-                      "description": "Tipo dell'entità (es. 'organization', 'partner')"
+                    "apiHosts": {
+                      "type": "object",
+                      "properties": {
+                        "global": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "dataRegion": {
+                          "type": "string",
+                          "format": "uri"
+                        }
+                      }
                     }
                   },
-                  "required": [
-                    "id",
-                    "name",
-                    "type"
-                  ]
+                  "required": ["id"]
                 }
               }
             }
-          },
-          "401": {
-            "description": "Non autorizzato - token di accesso mancante o non valido"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     }
   },
@@ -61,8 +61,7 @@
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "scheme": "bearer"
       }
     }
   }
